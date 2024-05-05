@@ -22,7 +22,8 @@ exports.register = async (req, res) => {
         res.send({
             id: user._id,
             name: user.name,
-            phoneNumber: user.phoneNumber
+            phoneNumber: user.phoneNumber,
+            isAdmin: user.isAdmin
         })
     } catch (error) {
         res.status(500).json({message : error.message})
@@ -47,7 +48,8 @@ exports.login = async (req, res) => {
         res.send({
             id: user._id,
             name: user.name,
-            phoneNumber: user.phoneNumber
+            phoneNumber: user.phoneNumber,
+            isAdmin: user.isAdmin
         })
     } catch (error) {
         res.status(500).json({message : error.message})
