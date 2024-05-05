@@ -25,4 +25,4 @@ async function startServer() {
 
 startServer()
 
-//readdirSync('./routes').map((route) => app.use('/', require(`./routes/${route}`)))
+readdirSync('./routes').map((route) => app.use('/', require(`./routes/${route}`)))
