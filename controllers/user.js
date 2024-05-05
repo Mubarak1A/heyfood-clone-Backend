@@ -31,26 +31,23 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password} = req.body
-        const user = await User.findOne({email})
+        const { phoneNumber, pin} = req.body
+        const user = await User.findOne({phoneNumber})
+
         if(!user){
-            res.status(400).json({message : "This email address is not registered"})
-        }
-        const check = await bcrypt.compare(password, user.password)
-        if(!check){
-            res.status(400).json({message : "Invalid password. Please try again."})
+            res.status(400).json({message : "This phone number is not registered"})
         }
 
-        const token = generateToken({id : user._id.toString()}, "7d")
+        const check = await bcrypt.compare(pin, user.pin)
+
+        if(!check){
+            res.status(400).json({message : "Incorrect Pin. Please try again."})
+        }
+
         res.send({
             id: user._id,
-            username: user.username,
-            picture: user.picture,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            token: token,
-            verify: user.verify,
-            message: 'Registration Successful! Please activate your email to start'
+            name: user.name,
+            phoneNumber: user.phoneNumber
         })
     } catch (error) {
         res.status(500).json({message : error.message})
