@@ -83,7 +83,7 @@ const removeItem = async (req, res) => {
 // Get all carts (for admin/analytics purposes)
 const getItems = async (req, res) => {
     try {
-        const carts = await Cart.find().populate('userId', 'name').populate('items.restaurantId', 'name');
+        const carts = await Cart.find();
         res.status(200).json(carts);
     } catch (error) {
         res.status(400).json({ message: error.message });
