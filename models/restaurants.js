@@ -40,10 +40,6 @@ const restaurantSchema = new mongoose.Schema({
     type: [foodItemSchema],
     default: [],
   },
-  carts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cart',
-  }],
   isNew: {
     type: Boolean,
     default: false,

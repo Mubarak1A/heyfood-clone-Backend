@@ -1,57 +1,98 @@
 const Cart = require('../models/cart');
-const Restaurant = require('../models/restaurants')
+const mongoose = require('mongoose');
 
+// Add item to the cart
 const addToCart = async (req, res) => {
     try {
-        const item = new Cart(req.body);
+        const { userId, restaurantId, foodName, quantity, price } = req.body;
 
-        const cart = await item.save();
+        let cart = await Cart.findOne({ userId });
 
-        const restaurant = await Restaurant.findOneAndUpdate(
-            { _id: cart.restaurantId },
-            { $push: { cart: item } },
-            { new: true }
+        if (!cart) {
+            cart = new Cart({ userId, items: [] });
+        }
+
+        const existingItemIndex = cart.items.findIndex(
+            item => item.restaurantId.toString() === restaurantId.toString() && item.foodName === foodName
         );
 
-        res.status(201).send('Item Added Successfully');
+        if (existingItemIndex >= 0) {
+            cart.items[existingItemIndex].quantity += quantity;
+            cart.items[existingItemIndex].price = price;
+        } else {
+            const newItem = { restaurantId, foodName, quantity, price };
+            cart.items.push(newItem);
+        }
+
+        await cart.save();
+
+        res.status(201).json({ message: 'Item added to cart successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
 
-const getItemById = async (req, res) => {
+// Get cart items for a specific user by user ID
+const getItemsById = async (req, res) => {
     try {
-        const userid = req.body.userid;
-        const items = await Cart.find({ userid : userid});
-        res.send(items);
+        const { userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+
+        const cart = await Cart.findOne({ userId }).populate('items.restaurantId', 'name'); 
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found for user' });
+        }
+
+        res.status(200).json(cart);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
 
+// Remove a specific item from the cart
 const removeItem = async (req, res) => {
     try {
-        const id = req.body._id
+        const { userId, itemId } = req.body;
 
-        const item = await Cart.deleteOne({ _id : id })
-        res.send("Item removed Successfully!")
+        if (!mongoose.Types.ObjectId.isValid(itemId)) {
+            return res.status(400).json({ message: 'Invalid item ID' });
+        }
+
+        const cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        const updatedItems = cart.items.filter(item => item._id.toString() !== itemId);
+
+        cart.items = updatedItems;
+
+        await cart.save();
+
+        res.status(200).json({ message: 'Item removed from cart successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
 
+// Get all carts (for admin/analytics purposes)
 const getItems = async (req, res) => {
     try {
-        const items = await Cart.find();
-        res.send(items);
+        const carts = await Cart.find().populate('userId', 'name').populate('items.restaurantId', 'name');
+        res.status(200).json(carts);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
 
 module.exports = {
     addToCart,
-    getItemById,
+    getItemsById,
     removeItem,
     getItems
 };
