@@ -1,36 +1,61 @@
 const mongoose = require('mongoose');
 
-const restaurantSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    ratings: {
-        type: Number,
-        required: true
-    },
-    ratingsnumber: {
-        type: Number,
-        required: true
-    },
-    discount: {
-        type: Number,
-        required: false
-    },
-    availablefoods: [],
-    carts: [],
-    isnew: {
-        type: Boolean,
-        default: false
-    },
-    freedrinks: {
-        type: Boolean,
-        default: false
-    }
-}, {
-    timestamps: true
+// Schema for individual food item with name, image, and price
+const foodItemSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
 });
 
-const Restaurant = mongoose.model('restaurant', restaurantSchema);
+const restaurantSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  ratings: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 5,
+  },
+  numberOfRatings: {
+    type: Number,
+    default: 0,
+  },
+  discount: {
+    type: Number,
+    default: 0,
+  },
+  availableFoods: {
+    type: [foodItemSchema],
+    default: [],
+  },
+  carts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart',
+  }],
+  isNew: {
+    type: Boolean,
+    default: false,
+  },
+  freeDrinks: {
+    type: Boolean,
+    default: false,
+  },
+}, {
+  timestamps: true,
+});
 
-module.exports = Restaurant
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+
+module.exports = Restaurant;
