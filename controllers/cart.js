@@ -1,10 +1,18 @@
 const Cart = require('../models/cart');
+const Restaurant = require('../models/restaurants')
 
 const addToCart = async (req, res) => {
     try {
         const item = new Cart(req.body);
 
         const cart = await item.save();
+
+        const restaurant = await Restaurant.findOneAndUpdate(
+            { _id: cart.restaurantId },
+            { $push: { cart: item } },
+            { new: true }
+        );
+
         res.status(201).send('Item Added Successfully');
     } catch (error) {
         res.status(400).json({ message: error.message });
