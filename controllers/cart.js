@@ -1,11 +1,4 @@
-const express = require('express');
 const Cart = require('../models/cart');
-const Room = require('../models/roomModels');
-const { v4: uuidv4 } = require('uuid');
-
-const router = express.Router();
-
-router.use(express.json());
 
 const addToCart = async (req, res) => {
     try {
@@ -18,7 +11,7 @@ const addToCart = async (req, res) => {
     }
 }
 
-const getItemsById = async (req, res) => {
+const getItemById = async (req, res) => {
     try {
         const userid = req.body.userid;
         const items = await Cart.find({ userid : userid});
@@ -50,7 +43,7 @@ const getItems = async (req, res) => {
 
 module.exports = {
     addToCart,
-    getItemsById,
+    getItemById,
     removeItem,
     getItems
 };
