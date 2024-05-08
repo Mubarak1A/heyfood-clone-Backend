@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const { foodItemSchema } = require('./foodItems')
-  
+
 
 const restaurantSchema = new mongoose.Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  imgUrl: {
     type: String,
     required: true,
   },
