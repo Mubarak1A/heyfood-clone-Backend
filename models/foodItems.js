@@ -8,12 +8,12 @@ const foodItemSchema = new mongoose.Schema({
   tagUrl: {
     type: String,
     required: true,
-  }
+  },
 });
 
-const foodItems = mongoose.model('foodItem', foodItemSchema);
+const FoodItem = mongoose.model('FoodItem', foodItemSchema);
 
 module.exports = {
-  foodItems,
-  foodItemSchema
+  FoodItem,
+  foodItemSchema,
 };
