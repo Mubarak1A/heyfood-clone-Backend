@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const { foodItemSchema } = require('./foodItems')
-
+const { foodItemSchema } = require('./foodItems');
 
 const restaurantSchema = new mongoose.Schema({
   name: {
