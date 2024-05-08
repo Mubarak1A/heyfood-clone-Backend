@@ -1,21 +1,6 @@
 const mongoose = require('mongoose');
-
-// Schema for individual food item with name, image, and price
-const foodItemSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-});
+const { foodItemSchema } = require('./foodItems')
+  
 
 const restaurantSchema = new mongoose.Schema({
   name: {
