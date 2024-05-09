@@ -1,9 +1,4 @@
-const { FoodItem } = require('../models/fooditems'); // Reference the FoodItem model
-
-const router = express.Router();
-
-// Middleware to parse request bodies
-router.use(express.json());
+const { FoodItem } = require('../models/foodItems');
 
 // Create a new food item
 const createFoodItem = async (req, res) => {
