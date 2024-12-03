@@ -15,7 +15,7 @@ jobs:
 
       - name: Fetch Render Secret Script
         env:
-          RENDER_SECRET_KEY: ${{ secrets.API_KEY }} # Add Render API key as a GitHub secret
+          RENDER_SECRET_KEY: ${{ secrets.API_SECRET_KEY }} # Add Render API key as a GitHub secret
         run: |
           # Fetch the Render secret file using Render API
           curl -X GET \
